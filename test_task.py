@@ -60,7 +60,7 @@ if 1:#try:
 
     # Copy the test file(s) to test dir
     logging.info(f'Копирую {" ".join(test_filenames)}')
-    print(f'папка {TDEST}: {os.path.isdir(TDEST)}')
+    logging.info(f'Папка {TDEST}: {os.path.isdir(TDEST)}')
     try:
         for fn in test_filenames:
             shutil.copy(os.path.join(TROOT, fn), TDEST)
