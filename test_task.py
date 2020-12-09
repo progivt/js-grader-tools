@@ -1,3 +1,13 @@
+"""
+This is a program to test a single task. It accepts a single argument - 
+the task code.
+First it will call get_lab_filenames.py from tests directory
+to obtain a mapping from task codes to test filenames in tests directory.
+It will then copy filename(s) for the task given as runtime argument
+to the student repo dir, optionally make that dir a node package, 
+and run npm install and npm test against the tests. 
+"""
+
 import sys, shutil, os, logging, subprocess
 
 NODE_PACKAGE_ROOT = '../lab'
@@ -23,24 +33,30 @@ try:
             raise Exception("Must pass exactly one task key to test")
         the_task = sys.argv[1]
         from tests.get_lab_filenames import get_lab_filenames
-        tests = get_lab_filenames(NODE_PACKAGE_ROOT)
+        tests = get_lab_filenames(PROOT)
         test_filenames = tests[the_task]
     except ImportError:
         raise Exception("Cannot find the mapper from repo name to test filenames")
-    except KeyError:
+    except Exception as e:
         raise Exception(f"Task {the_task} not found")
 
+    # Assume that the first result after replacing ("run-"->"arr-"), 
+    # gives solution name. Check that it exists, otherwise nothing to do
+    if type(test_filenames) == str:
+        test_filenames = [test_filenames]
+    solution_filename = test_filenames[0].replace('run-', 'arr-')
+    if not os.path.isfile(os.path.join(PROOT, solution_filename)):
+        raise Exception(f"Файл решения {solution_filename} НЕ НАЙДЕН")
+
     # Copy the test file(s) to test dir
+    logging.info(f'Копирую {" ".join(test_filenames)}')
     try:
-        if type(test_filenames) == str:
-            test_filenames = [test_filenames]
         for fn in test_filenames:
             shutil.copy(os.path.join(TROOT, fn), TDEST)
-            
     except FileNotFoundError:
         raise Exception(f"No tests found for problem {the_task}")
     except OSError:
-        raise Exception(f"Could not copy the test file {test_filename} to {TDEST}")
+        raise Exception(f"Could not copy the test file {fn} to {TDEST}")
 
     # Go to package dir and install node packages if we have package.json
     os.chdir(PROOT)
