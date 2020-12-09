@@ -50,8 +50,10 @@ if 1:#try:
 
     try:
         if os.path.isfile(TDEST):
+            logging.info('file test exists in {PROOT}, removing')
             os.unlink(TDEST)
         if not os.path.isdir(TDEST):
+            logging.info('creating dir {TDEST}, removing')
             os.mkdir(TDEST)
     except:
         raise Exception(f"Could not create dir {TDEST}")
