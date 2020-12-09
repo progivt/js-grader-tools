@@ -26,19 +26,19 @@ TROOT, PROOT, TDEST = map(os.path.abspath,
                           )
                       )
 
-if 1:#try:
+try:
     # Find out the test filename(s)
-    if 1:# try:
+    try:
         if len(sys.argv)!=2:
             raise Exception("Must pass exactly one task key to test")
         the_task = sys.argv[1]
         from tests.get_lab_filenames import get_lab_filenames
         tests = get_lab_filenames(PROOT)
         test_filenames = tests[the_task]
-    # except ImportError:
-    #     raise Exception("Cannot find the mapper from repo name to test filenames")
-    # except Exception as e:
-    #     raise Exception(f"Task {the_task} not found")
+    except ImportError:
+        raise Exception("Cannot find the mapper from repo name to test filenames")
+    except Exception as e:
+        raise Exception(f"Task {the_task} not found")
 
     # Assume that the first result after replacing ("run-"->"arr-"), 
     # gives solution name. Check that it exists, otherwise nothing to do
@@ -91,16 +91,16 @@ if 1:#try:
     else:
         logging.info("No package.json found in 'tests/'")
 
-    # Run npm test
+    # Actually run tests
     logging.info("Запуск npm test:")
     res = subprocess.check_call(['npm', '--silent', 'test'])
     logging.info("РЕЗУЛЬТАТ: тест(ы) пройден(ы)")
     sys.exit(0)
 
-# except subprocess.CalledProcessError as e:
-#     logging.error("РЕЗУЛЬТАТ: тест(ы) НЕ пройден(ы)")
-#     sys.exit(e.returncode)
+except subprocess.CalledProcessError as e:
+    logging.error("РЕЗУЛЬТАТ: тест(ы) НЕ пройден(ы)")
+    sys.exit(e.returncode)
 
-# except Exception as e:
-#     logging.error(e.args[0])
-#     sys.exit(1)
+except Exception as e:
+    logging.error(e.args[0])
+    sys.exit(1)
