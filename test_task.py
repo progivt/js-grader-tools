@@ -60,9 +60,10 @@ try:
     logging.info(f'Копирую {" ".join(test_filenames)}')
     try:
         for fn in test_filenames:
-            shutil.copy(os.path.join(TROOT, fn), TDEST)
+            test_fn = os.path.join(TROOT, fn)
+            shutil.copy(test_fn, TDEST)
     except FileNotFoundError:
-        raise Exception(f"No tests found for problem {the_task}")
+        raise Exception(f"Test {test_fn} not found for problem {the_task}")
     except OSError:
         raise Exception(f"Could not copy the test file {fn} to {TDEST}")
 
