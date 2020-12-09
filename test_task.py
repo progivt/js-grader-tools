@@ -48,6 +48,14 @@ if 1:#try:
     if not os.path.isfile(os.path.join(PROOT, solution_filename)):
         raise Exception(f"Файл решения {solution_filename} НЕ НАЙДЕН")
 
+    try:
+        if os.path.isfile(TDEST):
+            os.unlink(TDEST)
+        if not os.path.isdir(TDEST):
+            os.mkdir(TDEST)
+    except:
+        raise Exception(f"Could not create dir {TDEST}")
+
     # Copy the test file(s) to test dir
     logging.info(f'Копирую {" ".join(test_filenames)}')
     try:
