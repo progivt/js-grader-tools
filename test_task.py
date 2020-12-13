@@ -3,9 +3,12 @@ This is a program to test a single task. It accepts a single argument -
 the task code.
 First it will call get_lab_filenames.py from tests directory
 to obtain a mapping from task codes to test filenames in tests directory.
-It will then copy filename(s) for the task given as runtime argument
-to the student repo dir, optionally make that dir a node package, 
-and run npm install and npm test against the tests. 
+It will then 
+1) copy filename(s) for the task given as runtime argument from the tests
+   dir to the student repo dir. 
+2) Optionally make that dir a node package by copying the package*.json 
+   files from the tests repo and running npm install , and 
+3) run npm test against the tests. 
 """
 
 import sys, shutil, os, logging, subprocess
